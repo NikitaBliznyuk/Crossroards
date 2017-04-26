@@ -9,7 +9,23 @@ public class CrossroadsController : MonoBehaviour
     public TrafficLightController[] verticalLights;
     public TrafficLightController[] horizontalLights;
 
-    private float currentTime = 0.0f;
+    private float currentTime;
+
+    private void Start()
+    {
+        LightTime = 1.0f;
+        currentTime = 0.0f;
+    }
+
+    public void StartHorizontal()
+    {
+        currentTime = 0.0f;
+    }
+
+    public void StartVertical()
+    {
+        currentTime = LightTime;
+    }
 
     private void Update()
     {

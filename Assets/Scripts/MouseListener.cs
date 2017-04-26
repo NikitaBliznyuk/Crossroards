@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class MouseListener : MonoBehaviour
 {
+    public GameObject controlPanel;
+
     private Image image;
     private Color color;
 
@@ -14,13 +16,28 @@ public class MouseListener : MonoBehaviour
         color = image.color;
     }
 
+    private void Update()
+    {
+        if(Input.GetMouseButtonDown(0) && image.enabled)
+        {
+            controlPanel.SetActive(true);
+        }
+    }
+
     private void OnMouseEnter()
     {
-        image.color = color;
+        image.enabled = true;
     }
 
     private void OnMouseExit()
     {
-        image.color = new Color(0, 0, 0, 0);
+        if(!controlPanel.activeSelf)
+            image.enabled = false;
+    }
+
+    public void Close()
+    {
+        image.enabled = false;
+        controlPanel.SetActive(false);
     }
 }
