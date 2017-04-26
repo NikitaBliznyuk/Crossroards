@@ -1,17 +1,18 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 using Car;
 
-public class PassengerCarCreator : Creator
+public class TaxiCreator : Creator
 {
     private List<Color> colors = new List<Color>();
-    private float fovValue = 2.0f;
+    private float fovValue = 1.5f;
     private float offset = 0.16f;
 
-    public PassengerCarCreator(GameObject carInstance) : base(carInstance)
+    public TaxiCreator(GameObject carInstance) : base(carInstance)
     {
-        colors.AddRange(new List<Color>() { Color.green, Color.blue, Color.red });
+        colors.AddRange(new List<Color>() { Color.yellow, Color.gray, Color.black });
     }
 
     public override GameObject GetCar(Vector2 direction)
@@ -19,7 +20,7 @@ public class PassengerCarCreator : Creator
         var car = GameObject.Instantiate(carInstance);
 
         var characteristics = car.GetComponent<Characteristics>();
-        characteristics.Set(3.0f, colors[Random.Range(0, colors.Count)], direction, fovValue);
+        characteristics.Set(5.0f, colors[Random.Range(0, colors.Count)], direction, fovValue);
 
         var fov = car.GetComponent<BoxCollider>();
         fov.center = new Vector3

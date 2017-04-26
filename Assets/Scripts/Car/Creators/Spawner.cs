@@ -7,16 +7,17 @@ public class Spawner : MonoBehaviour
     [Range(0.5f, 2.0f)]
     public float flowDensity;
     public GameObject carPrefab;
+    public GameObject taxiPrefab;
     public Vector2 direction;
 
     private float cooldown;
-    private Creator passengerCarsCreator;
+    private Creator[] creators;
+
     private float offset = 0.33f;
 
     private void Start()
     {
-        passengerCarsCreator = new PassengerCarCreator(carPrefab);
-
+        creators = new Creator[] { new PassengerCarCreator(carPrefab), new TaxiCreator(taxiPrefab) };
         cooldown = flowDensity;
     }
 
@@ -24,7 +25,8 @@ public class Spawner : MonoBehaviour
     {
         if(cooldown >= (3.5f - flowDensity))
         {
-            var car = passengerCarsCreator.GetCar(direction);
+            var creatorIndex = Random.Range(0, creators.Length);
+            var car = creators[creatorIndex].GetCar(direction);
             var multiplier = Random.Range(0, 2);
             multiplier = multiplier == 0 ? -1 : 1;
             var position = transform.position + new Vector3(direction.y, direction.x) * offset * multiplier;

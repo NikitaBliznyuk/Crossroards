@@ -92,11 +92,11 @@ namespace Car
 
             if(lightController != null)
             {
-                distanceToLight = (lightController.transform.position - transform.position).magnitude;
+                distanceToLight = (lightController.transform.position - transform.position).magnitude - 0.16f;
             }
             if(carInfront != null)
             {
-                distanceToCar = (carInfront.transform.position - transform.position).magnitude;
+                distanceToCar = (carInfront.transform.position - transform.position).magnitude - 0.16f;
             }
 
             return distanceToLight > distanceToCar ? distanceToLight : distanceToCar;
