@@ -12,7 +12,6 @@ namespace Car
         public Movement carInfront = null;
         public TrafficLightController lightController = null;
         private float stopSpeed = 0.0f;
-        private float distance = 0.0f;
 
         public float CurrentSpeed { get { return currentSpeed; } }
 
@@ -27,6 +26,10 @@ namespace Car
         private void Update()
         {
             Move();
+
+            var distance = CalculateDistance();
+            stopSpeed = CalculateAcceleration(distance);
+
             if ((lightController == null || lightController.IsGreen) && (carInfront == null || carInfront.CurrentSpeed > currentSpeed))
             {
                 currentSpeed = characteristics.MaxSpeed;
@@ -59,16 +62,12 @@ namespace Car
             if (other.CompareTag("Traffic light"))
             {
                 lightController = other.gameObject.GetComponent<TrafficLightController>();
-                distance = CalculateDistance();
-                stopSpeed = CalculateAcceleration(distance);
             }
             else if (other.CompareTag("Car") && carInfront == null)
             {
-                if(Vector2.Angle(transform.position - other.transform.position, characteristics.Direction) == 180.0f)
+                if(Vector2.Angle(other.transform.position - transform.position, characteristics.Direction) == 0.0f)
                 {
                     carInfront = other.gameObject.GetComponent<Movement>();
-                    distance = CalculateDistance();
-                    stopSpeed = CalculateAcceleration(distance);
                 }
             }
         }
