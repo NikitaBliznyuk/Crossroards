@@ -31,13 +31,18 @@ namespace Car
 
             if ((lightController == null || lightController.IsGreen) && (carInfront == null || carInfront.CurrentSpeed > currentSpeed))
             {
-                currentSpeed = Mathf.Lerp(currentSpeed, currentSpeed + 2.5f, Time.deltaTime);
+                currentSpeed = Mathf.Lerp(currentSpeed, currentSpeed + characteristics.MaxSpeed, Time.deltaTime);
+            }
+            else if(distance >= 0.5f)
+            {
+                currentSpeed -= stopSpeed * Time.deltaTime;
+                currentSpeed = Mathf.Clamp(currentSpeed, 1.0f, characteristics.MaxSpeed);
             }
             else
             {
-                currentSpeed -= stopSpeed * Time.deltaTime;
+                currentSpeed = 0.0f;
             }
-            currentSpeed = Mathf.Clamp(currentSpeed, 0, characteristics.MaxSpeed);
+            currentSpeed = Mathf.Clamp(currentSpeed, 0.0f, characteristics.MaxSpeed);
         }
 
         private void Move()
@@ -67,11 +72,11 @@ namespace Car
 
         private void OnTriggerExit(Collider other)
         {
-            if (other.CompareTag("Traffic light"))
+            if (other.gameObject.GetComponent<TrafficLightController>() == lightController)
             {
                 lightController = null;
             }
-            else if (other.CompareTag("Car"))
+            else if (other.gameObject.GetComponent<Movement>() == carInfront)
             {
                 carInfront = null;
             }
