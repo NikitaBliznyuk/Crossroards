@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CrossroadsController : MonoBehaviour
 {
-    [Range(0.0f, 10.0f)]
+    [Range(1.0f, 9.0f)]
     public float lightTime;
 
     public TrafficLightController[] verticalLights;

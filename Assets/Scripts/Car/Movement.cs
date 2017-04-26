@@ -8,7 +8,6 @@ namespace Car
     {
         private float currentSpeed;
         private Characteristics characteristics;
-        private BoxCollider fieldOfView;
         public Movement carInfront = null;
         public TrafficLightController lightController = null;
         private float stopSpeed = 0.0f;
@@ -18,7 +17,6 @@ namespace Car
         private void Start()
         {
             characteristics = GetComponent<Characteristics>();
-            fieldOfView = GetComponent<BoxCollider>();
 
             currentSpeed = characteristics.MaxSpeed;
         }
@@ -29,23 +27,17 @@ namespace Car
 
             var distance = CalculateDistance();
             stopSpeed = CalculateAcceleration(distance);
-            stopSpeed = stopSpeed < 0.5f ? 0.5f : stopSpeed;
+            stopSpeed = Mathf.Clamp(stopSpeed, 1.0f, stopSpeed);
 
             if ((lightController == null || lightController.IsGreen) && (carInfront == null || carInfront.CurrentSpeed > currentSpeed))
             {
-                currentSpeed = characteristics.MaxSpeed;
+                currentSpeed = Mathf.Lerp(currentSpeed, currentSpeed + 2.5f, Time.deltaTime);
             }
             else
             {
-                if (currentSpeed > 0.0f)
-                {
-                    currentSpeed -= stopSpeed * Time.deltaTime;
-                }
-                else
-                {
-                    currentSpeed = 0.0f;
-                }
+                currentSpeed -= stopSpeed * Time.deltaTime;
             }
+            currentSpeed = Mathf.Clamp(currentSpeed, 0, characteristics.MaxSpeed);
         }
 
         private void Move()
@@ -87,19 +79,32 @@ namespace Car
 
         private float CalculateDistance()
         {
-            var distanceToLight = -1.0f;
-            var distanceToCar = -1.0f;
+            var distanceToLight = 0.0f;
+            var distanceToCar = 0.0f;
 
             if(lightController != null)
             {
-                distanceToLight = (lightController.transform.position - transform.position).magnitude - 0.16f;
+                distanceToLight = (lightController.transform.position - transform.position).magnitude;
             }
             if(carInfront != null)
             {
-                distanceToCar = (carInfront.transform.position - transform.position).magnitude - 0.16f;
+                distanceToCar = (carInfront.transform.position - transform.position).magnitude;
+            }
+            
+            if(lightController != null && carInfront != null)
+            {
+                return distanceToLight > distanceToCar ? distanceToCar : distanceToLight;
+            }
+            else if(lightController == null && carInfront != null)
+            {
+                return distanceToCar;
+            }
+            else if(carInfront == null && lightController != null)
+            {
+                return distanceToLight;
             }
 
-            return distanceToLight > distanceToCar ? distanceToLight : distanceToCar;
+            return -1.0f;
         }
     }
 }
