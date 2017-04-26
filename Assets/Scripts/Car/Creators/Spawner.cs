@@ -22,7 +22,7 @@ public class Spawner : MonoBehaviour
 
     private void Update()
     {
-        if(cooldown >= (2.5f - flowDensity))
+        if(cooldown >= (3.5f - flowDensity))
         {
             var car = passengerCarsCreator.GetCar(direction);
             var multiplier = Random.Range(0, 2);

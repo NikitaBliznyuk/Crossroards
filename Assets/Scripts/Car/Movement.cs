@@ -29,6 +29,7 @@ namespace Car
 
             var distance = CalculateDistance();
             stopSpeed = CalculateAcceleration(distance);
+            stopSpeed = stopSpeed < 0.5f ? 0.5f : stopSpeed;
 
             if ((lightController == null || lightController.IsGreen) && (carInfront == null || carInfront.CurrentSpeed > currentSpeed))
             {
