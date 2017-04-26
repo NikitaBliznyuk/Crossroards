@@ -11,5 +11,5 @@ public abstract class Creator
         this.carInstance = carInstance;
     }
 
-    public abstract GameObject GetCar(); 
+    public abstract GameObject GetCar(Vector2 direction); 
 }

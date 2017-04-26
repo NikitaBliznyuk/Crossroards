@@ -1,10 +1,12 @@
 fileFormatVersion: 2
 guid: c902155421c4a29478967f1f97781952
-timeCreated: 1493194364
+timeCreated: 1493197536
 licenseType: Free
 MonoImporter:
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - carPrefab: {fileID: 1799027521974286, guid: d345fd74d52e28541b01b54952dab0cd,
+      type: 2}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

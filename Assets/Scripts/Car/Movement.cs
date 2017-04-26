@@ -11,7 +11,7 @@ namespace Car
 
         private void Start()
         {
-            characteristics.GetComponent<Characteristics>();
+            characteristics = GetComponent<Characteristics>();
         }
 
         private void Update()
