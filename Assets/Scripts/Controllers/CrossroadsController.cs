@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class CrossroadsController : MonoBehaviour
 {
-    [Range(1.0f, 9.0f)]
-    public float lightTime;
+    public float LightTime { get; set; }
 
     public TrafficLightController[] verticalLights;
     public TrafficLightController[] horizontalLights;
@@ -16,8 +15,8 @@ public class CrossroadsController : MonoBehaviour
     {
         for (var i = 0; i < horizontalLights.Length; i++)
         {
-            horizontalLights[i].ToggleState(currentTime < lightTime);
-            verticalLights[i].ToggleState(currentTime >= lightTime);
+            horizontalLights[i].ToggleState(currentTime < LightTime);
+            verticalLights[i].ToggleState(currentTime >= LightTime);
         }
 
         currentTime = currentTime >= 10.0f ? 0.0f : currentTime + Time.deltaTime;
