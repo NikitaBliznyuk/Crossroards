@@ -23,6 +23,7 @@ public class Spawner : MonoBehaviour
         if(cooldown >= (2.5f - flowDensity))
         {
             var car = passengerCarsCreator.GetCar();
+            car.transform.position = transform.position;
             cooldown = 0.0f;
         }
         else

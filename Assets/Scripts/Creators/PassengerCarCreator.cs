@@ -16,7 +16,7 @@ public class PassengerCarCreator : Creator
     {
         var car = GameObject.Instantiate(carInstance);
 
-        var characteristics = car.AddComponent<Characteristics>();
+        var characteristics = car.GetComponent<Characteristics>();
         characteristics.Set(5.0f, Color.blue);
 
         var spriteRenderer = car.GetComponent<SpriteRenderer>();
