@@ -26,7 +26,7 @@ public class Spawner : MonoBehaviour
         if(cooldown >= (3.5f - flowDensity))
         {
             var creatorIndex = Random.Range(0, creators.Length);
-            var car = creators[0].GetCar(direction);
+            var car = creators[creatorIndex].GetCar(direction);
             var multiplier = Random.Range(0, 2);
             multiplier = multiplier == 0 ? -1 : 1;
             var position = transform.position + new Vector3(direction.y, direction.x) * offset * multiplier;

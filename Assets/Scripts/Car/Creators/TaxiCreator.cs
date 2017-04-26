@@ -12,7 +12,7 @@ public class TaxiCreator : Creator
 
     public TaxiCreator(GameObject carInstance) : base(carInstance)
     {
-        colors.AddRange(new List<Color>() { Color.yellow, Color.gray, Color.black });
+        colors.AddRange(new List<Color>() { Color.yellow, Color.magenta, Color.black });
     }
 
     public override GameObject GetCar(Vector2 direction)

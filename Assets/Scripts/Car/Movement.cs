@@ -10,7 +10,6 @@ namespace Car
         private Characteristics characteristics;
         public Movement carInfront = null;
         public TrafficLightController lightController = null;
-        private float stopSpeed = 0.0f;
 
         public float CurrentSpeed { get { return currentSpeed; } }
 
@@ -26,8 +25,8 @@ namespace Car
             Move();
 
             var distance = CalculateDistance();
-            stopSpeed = CalculateAcceleration(distance);
-            stopSpeed = Mathf.Clamp(stopSpeed, 1.0f, stopSpeed);
+            var stopSpeed = CalculateAcceleration(distance);
+            stopSpeed = Mathf.Clamp(stopSpeed, 2.0f, stopSpeed);
 
             if ((lightController == null || lightController.IsGreen) && (carInfront == null || carInfront.CurrentSpeed > currentSpeed))
             {
@@ -36,7 +35,7 @@ namespace Car
             else if(distance >= 0.5f)
             {
                 currentSpeed -= stopSpeed * Time.deltaTime;
-                currentSpeed = Mathf.Clamp(currentSpeed, 1.0f, characteristics.MaxSpeed);
+                currentSpeed = Mathf.Clamp(currentSpeed, characteristics.MaxSpeed / 4.0f, characteristics.MaxSpeed);
             }
             else
             {
@@ -89,11 +88,11 @@ namespace Car
 
             if(lightController != null)
             {
-                distanceToLight = (lightController.transform.position - transform.position).magnitude;
+                distanceToLight = (lightController.gameObject.transform.position - transform.position).magnitude;
             }
             if(carInfront != null)
             {
-                distanceToCar = (carInfront.transform.position - transform.position).magnitude;
+                distanceToCar = (carInfront.gameObject.transform.position - transform.position).magnitude;
             }
             
             if(lightController != null && carInfront != null)
@@ -109,7 +108,7 @@ namespace Car
                 return distanceToLight;
             }
 
-            return -1.0f;
+            return 0.0f;
         }
     }
 }
