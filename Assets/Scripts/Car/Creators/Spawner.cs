@@ -8,6 +8,7 @@ public class Spawner : MonoBehaviour
     public float flowDensity;
     public GameObject carPrefab;
     public GameObject taxiPrefab;
+    public GameObject busPrefab;
     public Vector2 direction;
 
     private float cooldown;
@@ -17,7 +18,7 @@ public class Spawner : MonoBehaviour
 
     private void Start()
     {
-        creators = new Creator[] { new PassengerCarCreator(carPrefab), new TaxiCreator(taxiPrefab) };
+        creators = new Creator[] { new PassengerCarCreator(carPrefab), new TaxiCreator(taxiPrefab), new BusCreator(busPrefab) };
         cooldown = flowDensity;
     }
 
