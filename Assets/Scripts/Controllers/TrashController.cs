@@ -6,6 +6,7 @@ public class TrashController : MonoBehaviour
 {
     private void OnTriggerEnter(Collider other)
     {
-        Destroy(other.gameObject);
+        if(other.CompareTag("Car"))
+            Destroy(gameObject);
     }
 }

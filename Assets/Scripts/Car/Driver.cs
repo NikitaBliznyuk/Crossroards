@@ -6,7 +6,7 @@ using Car;
 public class Driver : MonoBehaviour
 {
     private Movement car;
-    public Movement carInfront = null;
+    public List<Movement> carsInfront = new List<Movement>();
     public TrafficLightController lightController = null;
 
     private void Start()
@@ -16,15 +16,16 @@ public class Driver : MonoBehaviour
 
     private void Update()
     {
-        var distance = CalculateDistance();
+        int index;
+        var distance = CalculateDistance(out index);
         var stopSpeed = CalculateAcceleration(distance);
         stopSpeed = Mathf.Clamp(stopSpeed, 2.0f, stopSpeed);
 
-        if ((lightController == null || lightController.IsGreen) && (carInfront == null || carInfront.CurrentSpeed > car.CurrentSpeed))
+        if ((lightController == null || lightController.IsGreen) && (carsInfront.Count == 0 || carsInfront[index].CurrentSpeed > car.CurrentSpeed))
         {
             car.CurrentSpeed = Mathf.Lerp(car.CurrentSpeed, car.CurrentSpeed + car.CarCharacteristics.MaxSpeed, Time.deltaTime);
         }
-        else if (distance >= 0.5f)
+        else if (distance >= 0.6f)
         {
             car.CurrentSpeed -= stopSpeed * Time.deltaTime;
             car.CurrentSpeed = Mathf.Clamp(car.CurrentSpeed, car.CarCharacteristics.MaxSpeed / 4.0f, car.CarCharacteristics.MaxSpeed);
@@ -36,29 +37,41 @@ public class Driver : MonoBehaviour
         car.CurrentSpeed = Mathf.Clamp(car.CurrentSpeed, 0.0f, car.CarCharacteristics.MaxSpeed);
     }
 
-    private float CalculateDistance()
+    private float CalculateDistance(out int index)
     {
         var distanceToLight = 0.0f;
         var distanceToCar = 0.0f;
+        index = -1;
 
         if (lightController != null)
         {
             distanceToLight = (lightController.gameObject.transform.position - transform.position).magnitude;
         }
-        if (carInfront != null)
+
+        if(carsInfront.Count > 0)
         {
-            distanceToCar = (carInfront.gameObject.transform.position - transform.position).magnitude;
+            distanceToCar = (carsInfront[0].gameObject.transform.position - transform.position).magnitude;
+            index = 0;
+            for (int i = 1; i < carsInfront.Count; i++)
+            {
+                var newDIstance = (carsInfront[i].gameObject.transform.position - transform.position).magnitude;
+                if(newDIstance < distanceToCar)
+                {
+                    index = i;
+                    distanceToCar = newDIstance;
+                }
+            }
         }
 
-        if (lightController != null && carInfront != null)
+        if (lightController != null && carsInfront.Count > 0)
         {
             return distanceToLight > distanceToCar ? distanceToCar : distanceToLight;
         }
-        else if (carInfront == null && lightController != null)
+        else if (carsInfront.Count == 0 && lightController != null)
         {
             return distanceToLight;
         }
-        else if (lightController == null && carInfront != null)
+        else if (lightController == null && carsInfront.Count > 0)
         {
             return distanceToCar;
         }
@@ -73,14 +86,13 @@ public class Driver : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log(other.tag);
         if (other.CompareTag("Traffic light"))
         {
             lightController = other.gameObject.GetComponent<TrafficLightController>();
         }
-        else if (other.CompareTag("Car") && carInfront == null)
+        else if (other.CompareTag("Car"))
         {
-            carInfront = other.gameObject.GetComponent<Movement>();
+            carsInfront.Add(other.gameObject.GetComponent<Movement>());
         }
     }
 
@@ -90,9 +102,9 @@ public class Driver : MonoBehaviour
         {
             lightController = null;
         }
-        else if (carInfront != null && other.gameObject == carInfront.gameObject)
+        else if (carsInfront.Count > 0)
         {
-            carInfront = null;
+            carsInfront.Remove(other.GetComponent<Movement>());
         }
     }
 }
