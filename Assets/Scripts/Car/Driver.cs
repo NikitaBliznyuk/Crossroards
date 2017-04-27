@@ -14,6 +14,28 @@ public class Driver : MonoBehaviour
         car = GetComponentInParent<Movement>();
     }
 
+    private void Update()
+    {
+        var distance = CalculateDistance();
+        var stopSpeed = CalculateAcceleration(distance);
+        stopSpeed = Mathf.Clamp(stopSpeed, 2.0f, stopSpeed);
+
+        if ((lightController == null || lightController.IsGreen) && (carInfront == null || carInfront.CurrentSpeed > car.CurrentSpeed))
+        {
+            car.CurrentSpeed = Mathf.Lerp(car.CurrentSpeed, car.CurrentSpeed + car.CarCharacteristics.MaxSpeed, Time.deltaTime);
+        }
+        else if (distance >= 0.5f)
+        {
+            car.CurrentSpeed -= stopSpeed * Time.deltaTime;
+            car.CurrentSpeed = Mathf.Clamp(car.CurrentSpeed, car.CarCharacteristics.MaxSpeed / 4.0f, car.CarCharacteristics.MaxSpeed);
+        }
+        else
+        {
+            car.CurrentSpeed = 0.0f;
+        }
+        car.CurrentSpeed = Mathf.Clamp(car.CurrentSpeed, 0.0f, car.CarCharacteristics.MaxSpeed);
+    }
+
     private float CalculateDistance()
     {
         var distanceToLight = 0.0f;
@@ -51,17 +73,14 @@ public class Driver : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        Debug.Log(other.tag);
         if (other.CompareTag("Traffic light"))
         {
             lightController = other.gameObject.GetComponent<TrafficLightController>();
         }
         else if (other.CompareTag("Car") && carInfront == null)
         {
-            var angle = Vector2.Angle(other.transform.position - transform.position, car.CarCharacteristics.Direction);
-            if (angle >= -20.0f && angle <= 20.0f)
-            {
-                carInfront = other.gameObject.GetComponent<Movement>();
-            }
+            carInfront = other.gameObject.GetComponent<Movement>();
         }
     }
 
