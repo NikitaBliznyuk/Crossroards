@@ -17,7 +17,7 @@ public class Spawner : MonoBehaviour
 
     private void Start()
     {
-        creators = new Creator[] { new PassengerCarCreator(carPrefab), new TaxiCreator(taxiPrefab) };
+        creators = new Creator[] { new PassengerCarCreator(carPrefab)};
         cooldown = flowDensity;
     }
 

@@ -7,7 +7,6 @@ public class PassengerCarCreator : Creator
 {
     private List<Color> colors = new List<Color>();
     private float fovValue = 2.0f;
-    private float offset = 0.16f;
 
     public PassengerCarCreator(GameObject carInstance) : base(carInstance)
     {
@@ -21,10 +20,10 @@ public class PassengerCarCreator : Creator
         var characteristics = car.GetComponent<Characteristics>();
         characteristics.Set(3.0f, colors[Random.Range(0, colors.Count)], direction, fovValue);
 
-        var fov = car.GetComponent<BoxCollider>();
+        var fov = car.GetComponentsInChildren<BoxCollider>()[1];
         fov.center = new Vector3
-            (direction.x * ((fovValue / 2.0f) + offset),
-            direction.y * ((fovValue / 2.0f) + offset),
+            (direction.x * (fovValue / 2.0f),
+            direction.y * (fovValue / 2.0f),
             fov.center.z);
         fov.size = new Vector3
             (direction.x == 0 ? fov.size.x : Mathf.Abs(direction.x) * fovValue,
