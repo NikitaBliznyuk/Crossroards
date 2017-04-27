@@ -21,11 +21,11 @@ public class Driver : MonoBehaviour
         var stopSpeed = CalculateAcceleration(distance);
         stopSpeed = Mathf.Clamp(stopSpeed, 2.0f, stopSpeed);
 
-        if ((lightController == null || lightController.IsGreen) && (carsInfront.Count == 0 || carsInfront[index].CurrentSpeed > car.CurrentSpeed))
+        if ((lightController == null || lightController.IsGreen) && (carsInfront.Count == 0 || carsInfront[index].CurrentSpeed >= car.CurrentSpeed))
         {
-            car.CurrentSpeed = Mathf.Lerp(car.CurrentSpeed, car.CurrentSpeed + car.CarCharacteristics.MaxSpeed, Time.deltaTime);
+            car.CurrentSpeed = Mathf.Lerp(car.CurrentSpeed, car.CarCharacteristics.MaxSpeed, Time.deltaTime);
         }
-        else if (distance >= 0.6f)
+        else if (distance >= 0.5f)
         {
             car.CurrentSpeed -= stopSpeed * Time.deltaTime;
             car.CurrentSpeed = Mathf.Clamp(car.CurrentSpeed, car.CarCharacteristics.MaxSpeed / 4.0f, car.CarCharacteristics.MaxSpeed);

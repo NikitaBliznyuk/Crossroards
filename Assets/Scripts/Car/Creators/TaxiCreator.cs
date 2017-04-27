@@ -8,7 +8,7 @@ public class TaxiCreator : Creator
 {
     private List<Color> colors = new List<Color>();
     private float fovValue = 1.5f;
-    private float offset = 0.16f;
+    private float offset = 0.19f;
 
     public TaxiCreator(GameObject carInstance) : base(carInstance)
     {
@@ -22,7 +22,7 @@ public class TaxiCreator : Creator
         var characteristics = car.GetComponent<Characteristics>();
         characteristics.Set(5.0f, colors[Random.Range(0, colors.Count)], direction, fovValue);
 
-        var fov = car.GetComponent<BoxCollider>();
+        var fov = car.GetComponentsInChildren<BoxCollider>()[1];
         fov.center = new Vector3
             (direction.x * ((fovValue / 2.0f) + offset),
             direction.y * ((fovValue / 2.0f) + offset),
